@@ -94,7 +94,14 @@ class MainPage implements ComponentListener, MouseListener{
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 	  if(arg0.getSource() == borrow) {
-		  System.out.print("Borrow Mode Selected");
+		  System.out.print("Borrow Mode Selected. " +
+				  "Dropping Selection Menu");
+		  frame.remove(operations);
+		  frame.revalidate();
+		  frame.repaint();
+		  UserFrame uf = new UserFrame();
+		  uf.showFrame(frame);
+		  
 	  }
 		
 	}
