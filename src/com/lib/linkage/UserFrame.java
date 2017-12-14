@@ -14,6 +14,7 @@ public class UserFrame implements ActionListener, DocumentListener{
 	ImageLoader loader = new ImageLoader();
 	JFrame frame;
 	JButton Enter = new JButton("登录");
+	JLabel entercontain;
 	JTextField username = new JTextField();
 	JPasswordField password = new JPasswordField();
 	
@@ -22,7 +23,7 @@ public class UserFrame implements ActionListener, DocumentListener{
 		JLabel usershow, ushow, pshow, hint;
 		ushow = new JLabel("用户名：");
 		pshow = new JLabel("密码： ");
-		hint = new JLabel("请刷身份证/校园卡/输入用户名登录");
+		hint = new JLabel("请刷校园卡/输入用户名登录");
 		
 		//Initialize the unknown photo
 		BufferedImage userimg = loader.LoadImage("UnknownId.png");
@@ -32,10 +33,22 @@ public class UserFrame implements ActionListener, DocumentListener{
 		Image img = usericon.getImage();
 		img = img.getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH);
 		usericon = new ImageIcon(img);
-		
+	
 		//Now it is available. We just put it into the JLabel Container
 		usershow = new JLabel(usericon);
 		usershow.setBackground(Color.decode("#005cff"));
+		
+		username.setMinimumSize(new Dimension(10,100));
+		
+		//Show Enter Button
+		BufferedImage enterico = loader.LoadImage("arrow_right.png");
+		ImageIcon entericon = new ImageIcon(enterico);
+		Image image = entericon.getImage();
+		image = image.getScaledInstance(32, 32, java.awt.Image.SCALE_SMOOTH);
+		entericon = new ImageIcon(image);
+		entercontain = new JLabel(entericon);
+		
+		
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridwidth = GridBagConstraints.REMAINDER;
 		gbl.setConstraints(usershow, gc);
@@ -49,10 +62,17 @@ public class UserFrame implements ActionListener, DocumentListener{
 		login.add(pshow);
 		gbl.setConstraints(password, gc);
 		login.add(password);
+		gc.anchor = GridBagConstraints.CENTER;
+		gbl.setConstraints(entercontain, gc);
+		login.add(entercontain);
 		username.setOpaque(false);
 		username.getDocument().addDocumentListener(this);
+		
+		//Set the default width of username field
+		setMinimumWidth(username);
 		password.setOpaque(false);
 		password.getDocument().addDocumentListener(this);
+		
 		Enter.addActionListener(this);
 		String fontname = login.getFont().getFontName();
 		login.setFont(new Font(fontname, Font.PLAIN, 18));
@@ -63,6 +83,12 @@ public class UserFrame implements ActionListener, DocumentListener{
 		
 	}
 
+	public void setMinimumWidth(JComponent c) {
+		int height = c.getHeight();
+		int width = 400;
+		c.setSize(width, height);
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == Enter) {
@@ -73,6 +99,7 @@ public class UserFrame implements ActionListener, DocumentListener{
 			
 		}
 		
+	
 	}
 	public void changedUpdate(DocumentEvent arg0) {}
 	public void insertUpdate(DocumentEvent arg0) {
