@@ -25,22 +25,25 @@ public class MarkShow implements MouseListener{
 		this.frame = frame;
 		hint = "你的分数:" + (int)marks;
 		title = new JLabel();
+		mp.setOpaque(false);
 		if(marks >= 60) {
-			bi  = il.LoadImage("arrow_right.png");
+			frame.getContentPane().setBackground(Color.decode("#98fb98"));
+			bi  = il.LoadImage("arrow_right.jpg");
 			passed = true;
 			hint += " 。恭喜你已经通过了入馆测试。";
 			instruct = "请点击下一步填写个人信息";
 			title.setText(higher);
 		}
 		else {
-			bi  = il.LoadImage("arrow_right.png");
+			frame.getContentPane().setBackground(Color.decode("#ff8d8d"));
+			bi  = il.LoadImage("arrow_left.jpg");
 			passed = false;
 			hint += " 。很遗憾，你没有通过入馆测试。";
 			instruct = "请返回问题再试一次";
 			title.setText(lower);
 		}
 		//Load the buffered image
-		bi = il.resizeImg(bi, 32, 32);
+		bi = il.resizeImg(bi, 64, 64);
 		icon = new ImageIcon(bi);
 		next = new JLabel(icon);
 		
@@ -65,7 +68,7 @@ public class MarkShow implements MouseListener{
 		
 		frame.add(mp, BorderLayout.CENTER);
 		frame.revalidate();
-		frame.repaint();
+		//frame.repaint();
 		
 	}
 
@@ -89,8 +92,19 @@ public class MarkShow implements MouseListener{
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		System.out.println("Mouse Pressed");
-		
+		if(passed) {
+			NewStudRegister nsr = new NewStudRegister();
+			frame.remove(mp);
+			frame.revalidate();
+			frame.repaint();
+			nsr.showRegisterMenu(frame);
+		}else {
+			EntryQuestion eq = new EntryQuestion();
+			frame.remove(mp);
+			frame.revalidate();
+			frame.repaint();
+			eq.StartQuestion(frame);
+		}
 	}
 
 	@Override

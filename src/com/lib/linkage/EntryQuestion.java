@@ -31,6 +31,9 @@ public class EntryQuestion implements ActionListener{
 	public void StartQuestion(JFrame frame){
 		nowq = 1;
 		this.frame = frame;
+		QA.setOpaque(false);
+		Wrapper.setOpaque(false);
+		frame.getContentPane().setBackground(Color.WHITE);
 		CountQuestions();
 		hint = "本测试共 "+ allquestions + " 题，需要有百分之 60 的答案正确"+
 		"才能申请读者借还书权限，加油吧！";
