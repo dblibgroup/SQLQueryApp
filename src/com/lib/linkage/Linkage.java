@@ -35,6 +35,7 @@ class MainPage implements ComponentListener, MouseListener{
 	JButton eng = new JButton("ENG");
 	JButton chinese = new JButton();
 	String colourpicker;
+	GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 	float o_width =0;
 	
 	//创建加载图片的管理器对象
@@ -43,6 +44,10 @@ class MainPage implements ComponentListener, MouseListener{
 	String hint = "本系统模拟了学校的图书管理系统，并非"+
 	"真实的借书系统。";
 	public void MainPaging(){
+		frame.setBackground(Color.white);
+		frame.setLocationRelativeTo(null);
+		frame.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+		//gd.setFullScreenWindow(frame);
 		icon = il.LoadImage("lib.png");
 		logo = new ImageIcon(icon);
 		logolabel = new JLabel(logo);
@@ -184,34 +189,8 @@ class MainPage implements ComponentListener, MouseListener{
       }
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-		/* The options pane have to be removed
-		 * in any situations. So remove them at
-		 * once.
-		*/
-		frame.remove(operations);
-		frame.revalidate();
-		frame.repaint();
-		  if(arg0.getSource() == borrow) {
-			  System.out.print("Borrow Mode Selected. " +
-					  "Dropping Selection Menu");
-			  UserFrame uf = new UserFrame();
-			  uf.showFrame(frame);
-			  
-		  }
-		  if (arg0.getSource() == return_bb) {
-			  System.out.print("Return mode selected.");
-			  Return r = new Return();
-			  r.ReturnMode(frame);
-		  }
-		  if (arg0.getSource() == administration) {
-			  System.out.println("Admin Mode Selected." +
-					  "Now the options pane is dropped for password pane");
-			  Management m = new Management();
-			  m.ShowPWUI(frame);
-		  }
-		  if(arg0.getSource() == entrance) {
-			   new ShowRules(frame);
-		  }
+		//mouseClicked is buggy, we use mousePressed instead
+		
 	}
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
@@ -251,8 +230,34 @@ class MainPage implements ComponentListener, MouseListener{
 	}
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
+		/* The options pane have to be removed
+		 * in any situations. So remove them at
+		 * once.
+		*/
+		frame.remove(operations);
+		frame.revalidate();
+		frame.repaint();
+		  if(arg0.getSource() == borrow) {
+			  System.out.print("Borrow Mode Selected. " +
+					  "Dropping Selection Menu");
+			  UserFrame uf = new UserFrame();
+			  uf.showFrame(frame);
+			  
+		  }
+		  if (arg0.getSource() == return_bb) {
+			  System.out.print("Return mode selected.");
+			  Return r = new Return();
+			  r.ReturnMode(frame);
+		  }
+		  if (arg0.getSource() == administration) {
+			  System.out.println("Admin Mode Selected." +
+					  "Now the options pane is dropped for password pane");
+			  Management m = new Management();
+			  m.ShowPWUI(frame);
+		  }
+		  if(arg0.getSource() == entrance) {
+			   new ShowRules(frame);
+		  }
 	}
 	@Override
 	public void mouseReleased(MouseEvent arg0) {

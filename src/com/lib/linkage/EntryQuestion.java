@@ -153,6 +153,7 @@ public class EntryQuestion implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		//When user select at least one value, then the 'next' button is enabled
 		if(e.getSource() == a || e.getSource() == b || e.getSource() == c
 				|| e.getSource() == d) {
 			nextquestion.setEnabled(true);
@@ -171,7 +172,15 @@ public class EntryQuestion implements ActionListener{
 			ShowQuestions(nowq);
 		}
 		if(e.getSource() == submit) {
-			//According to user mark, go to different pages
+			//Judge whether the last question is correct
+			String selection = getSelectedActionName(choices);
+			if(selection.equals(answer)) {
+				correctquestions ++;
+				marks = ((float)correctquestions / (float)allquestions) * 100;
+				System.out.println("The answer is correct. Your marks: "+
+						marks + " %.");
+			}
+			
 			frame.remove(Wrapper);
 			frame.remove(nextquestion);
 			frame.remove(submit);
