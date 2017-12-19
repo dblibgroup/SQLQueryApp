@@ -174,7 +174,7 @@ class MainPage implements ComponentListener, MouseListener{
     	  		//Not our concern
     }
     public void componentResized(ComponentEvent arg0) {
-    		//为了防止照片失真，因此我们不会调整图书馆标志图片的大小
+    		/*为了防止照片失真，因此我们不会调整图书馆标志图片的大小
     		if(o1.getIconWidth() * 3 > frame.getWidth()) {
     			//We don't need to judge it every time. Just resize both of them.
     			borrow.setIcon(il.resizeIcon(o1, borrow));
@@ -183,6 +183,12 @@ class MainPage implements ComponentListener, MouseListener{
     			search.setIcon(il.resizeIcon(o4, search));
     			entrance.setIcon(il.resizeIcon(o5, entrance));
     		}
+    		*/
+    		borrow.setIcon(new ImageIcon(il.resizeImg(bimg, 150, 240)));
+    		return_bb.setIcon(new ImageIcon(il.resizeImg(rimg, 150, 240)));
+    		administration.setIcon(new ImageIcon(il.resizeImg(aimg, 150, 240)));
+    		search.setIcon(new ImageIcon(il.resizeImg(simg, 150, 240)));
+    		entrance.setIcon(new ImageIcon(il.resizeImg(apimg, 150, 240)));
     }
     public void componentShown(ComponentEvent arg0) {
     	  		//Not our concern

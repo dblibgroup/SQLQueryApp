@@ -41,7 +41,7 @@ public class UserFrame implements ActionListener, DocumentListener{
 		username.setMinimumSize(new Dimension(10,100));
 		
 		//Show Enter Button
-		BufferedImage enterico = loader.LoadImage("arrow_right.png");
+		BufferedImage enterico = loader.LoadImage("arrow_right.jpg");
 		ImageIcon entericon = new ImageIcon(enterico);
 		Image image = entericon.getImage();
 		image = image.getScaledInstance(32, 32, java.awt.Image.SCALE_SMOOTH);
