@@ -166,7 +166,6 @@ FocusListener, MouseListener{
 		if(de.getDocument() == scard.getDocument()) {
 			if(scard.getText().equals("")) enteredscard.setText("<请输入卡号>");
 			else {
-				System.out.print("Here");
 				adjustedstcard = fillDigit(scard.getText());
 				enteredscard.setText(adjustedstcard);
 			}
