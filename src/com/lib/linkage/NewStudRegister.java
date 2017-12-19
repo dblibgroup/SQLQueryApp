@@ -1,6 +1,8 @@
 package com.lib.linkage;
 
 import javax.swing.*;
+import javax.swing.border.*;
+
 import java.awt.*;
 import javax.swing.event.*;
 import java.awt.event.*;
@@ -18,10 +20,13 @@ FocusListener, MouseListener{
 	JLabel name = new JLabel("姓名: ");
 	JLabel stdno = new JLabel("学号: ");
 	
-	JLabel enteredname = new JLabel();
+	JLabel enteredname = new JLabel("<请输入姓名>");
+	JLabel enteredsno = new JLabel("<请输入学号>");
+	
 	JTextField sname = new JTextField();
 	JTextField sno = new JTextField();
-	
+	Border border = BorderFactory.createEmptyBorder(10,10,10,10);
+	Border ImageBorder = BorderFactory.createEmptyBorder(10,10,10,10);
 
 	GridBagLayout gbl = new GridBagLayout();
 	GridBagConstraints gc = new GridBagConstraints();
@@ -39,12 +44,21 @@ FocusListener, MouseListener{
 		BufferedImage img = il.resizeImg(il.LoadImage("UnknownIdWhite.png"), 128, 128);
 		ImageIcon iconn = new ImageIcon(img);
 		icon = new JLabel(iconn);
+		icon.setBorder(ImageBorder);
 		
 		sname.setMinimumSize(new Dimension(sname.getHeight(), 400));
 		sname.getDocument().addDocumentListener(this);
 		sname.addFocusListener(this);
+		sname.setBorder(border);
 		
 		enteredname.addMouseListener(this);
+		enteredname.setBorder(border);
+		
+		sno.getDocument().addDocumentListener(this);
+		sno.addFocusListener(this);
+		
+		enteredsno.addMouseListener(this);
+		enteredsno.setBorder(border);
 		
 		gc.gridwidth = GridBagConstraints.REMAINDER;
 		gbl.setConstraints(register,	 gc);
@@ -55,12 +69,11 @@ FocusListener, MouseListener{
 		RegisterPanel.add(icon);
 		
 		//Themeing name tag
-		name.setForeground(Color.WHITE);
 		RegisterPanel.add(name);
 		gc.gridwidth = GridBagConstraints.REMAINDER;
 		gc.anchor = GridBagConstraints.WEST;
-		sname.setColumns(10);
-		sname.setMinimumSize(sname.getPreferredSize());
+		
+		sname = TranslucentTextField(sname);  //Style sname TextField
 		
 		gbl.setConstraints(sname, gc);
 		RegisterPanel.add(sname);
@@ -69,14 +82,28 @@ FocusListener, MouseListener{
 		enteredname.setVisible(false);
 		
 		RegisterPanel.add(stdno);
+		sno = TranslucentTextField(sno);     //Style sno TextField
 		
 		gbl.setConstraints(sno, gc);
+		sno.setBorder(border);
+		
 		RegisterPanel.add(sno);
+		gbl.setConstraints(enteredsno, gc);
+		RegisterPanel.add(enteredsno);
+		enteredsno.setVisible(false);
+		
 		frame.add(RegisterPanel,BorderLayout.CENTER);
 		frame.revalidate();
 		frame.repaint();
 	}
-
+	public JTextField TranslucentTextField(JTextField field) {
+		field.setMinimumSize(field.getPreferredSize());
+		field.setBackground(new Color(0,0,0,0));
+		field.setOpaque(false);
+		field.setColumns(10);
+		return field;
+	}
+	
 	@Override
 	public void changedUpdate(DocumentEvent arg0) {
 		// TODO Auto-generated method stub
@@ -84,17 +111,31 @@ FocusListener, MouseListener{
 	}
 
 	@Override
-	public void insertUpdate(DocumentEvent arg0) {
-		//System.out.println("Changing text. Resizing...");   //For testing purpose
-		enteredname.setText(sname.getText());
+	public void insertUpdate(DocumentEvent de) {
+		if(de.getDocument() == sname.getDocument()) {
+			//System.out.println("Changing text. Resizing...");   //For testing purpose
+			if(sname.getText().equals("")) enteredname.setText("<请输入姓名>");
+			else enteredname.setText(sname.getText());
+		}
+		if(de.getDocument() == sno.getDocument()) {
+			if(sno.getText().equals("")) enteredsno.setText("<请输入学号>");
+			else enteredsno.setText(sno.getText());
+		}
 		frame.revalidate();
 		frame.repaint();
 	}
 
 	@Override
-	public void removeUpdate(DocumentEvent arg0) {
-		//System.out.println("Changing text. Resizing...");   //For testing purpose
-		enteredname.setText(sname.getText());
+	public void removeUpdate(DocumentEvent de) {
+		if(de.getDocument() == sname.getDocument()) {
+			//System.out.println("Changing text. Resizing...");   //For testing purpose
+			if(sname.getText().equals("")) enteredname.setText("<请输入姓名>");
+			else enteredname.setText(sname.getText());
+		}
+		if(de.getDocument() == sno.getDocument()) {
+			if(sno.getText().equals("")) enteredsno.setText("<请输入学号>");
+			else enteredsno.setText(sno.getText());
+		}
 		frame.revalidate();
 		frame.repaint();
 	}
@@ -108,6 +149,10 @@ FocusListener, MouseListener{
 		if(e.getSource() == sname) {
 			sname.setVisible(false);
 			enteredname.setVisible(true);
+		}
+		if(e.getSource() == sno) {
+			sno.setVisible(false);
+			enteredsno.setVisible(true);
 		}
 		
 	}
@@ -124,6 +169,11 @@ FocusListener, MouseListener{
 			sname.setVisible(true);
 			sname.grabFocus();
 			enteredname.setVisible(false);
+		}
+		if(e.getSource() == enteredsno) {
+			sno.setVisible(true);
+			sno.grabFocus();
+			enteredsno.setVisible(false);
 		}
 	}
 
