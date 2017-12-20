@@ -31,7 +31,10 @@ FocusListener, MouseListener{
 	JTextField scard = new JTextField();
 	JPasswordField password = new JPasswordField();
 	
-	Border border = BorderFactory.createEmptyBorder(10,10,10,10);
+	Border tfborder = BorderFactory.createMatteBorder(0, 0, 2, 0, Color.WHITE);
+	Border border = BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10,10,8,10),
+			tfborder);
+	Border invisibleborder = BorderFactory.createEmptyBorder(10,10,10,10);
 	Border ImageBorder = BorderFactory.createEmptyBorder(10,10,10,10);
 
 	GridBagLayout gbl = new GridBagLayout();
@@ -60,19 +63,19 @@ FocusListener, MouseListener{
 		sname.setBorder(border);
 		
 		enteredname.addMouseListener(this);
-		enteredname.setBorder(border);
+		enteredname.setBorder(invisibleborder);
 		
 		sno.getDocument().addDocumentListener(this);
 		sno.addFocusListener(this);
 		
 		enteredsno.addMouseListener(this);
-		enteredsno.setBorder(border);
+		enteredsno.setBorder(invisibleborder);
 		
 		scard.getDocument().addDocumentListener(this);
 		scard.addFocusListener(this);
 		
 		enteredscard.addMouseListener(this);
-		enteredscard.setBorder(border);
+		enteredscard.setBorder(invisibleborder);
 		
 		gc.gridwidth = GridBagConstraints.REMAINDER;
 		gbl.setConstraints(register,	 gc);
@@ -88,12 +91,12 @@ FocusListener, MouseListener{
 		gc.anchor = GridBagConstraints.WEST;
 		
 		sname = TranslucentTextField(sname);  //Style sname TextField
+		sname.setVisible(false);
 		
 		gbl.setConstraints(sname, gc);
 		RegisterPanel.add(sname);
 		gbl.setConstraints(enteredname, gc);
 		RegisterPanel.add(enteredname);
-		enteredname.setVisible(false);
 		
 		//Themeing Stdnumber Tag
 		RegisterPanel.add(stdno);
@@ -101,11 +104,11 @@ FocusListener, MouseListener{
 		
 		gbl.setConstraints(sno, gc);
 		sno.setBorder(border);
+		sno.setVisible(false);
 		
 		RegisterPanel.add(sno);
 		gbl.setConstraints(enteredsno, gc);
 		RegisterPanel.add(enteredsno);
-		enteredsno.setVisible(false);
 		
 		//Themeing card number Tag
 		RegisterPanel.add(idcard);
@@ -113,11 +116,11 @@ FocusListener, MouseListener{
 		scard = TranslucentTextField(scard);
 		gbl.setConstraints(scard, gc);
 		scard.setBorder(border);
+		scard.setVisible(false);
 		
 		RegisterPanel.add(scard);
 		gbl.setConstraints(enteredscard, gc);
 		RegisterPanel.add(enteredscard);
-		enteredscard.setVisible(false);
 		
 		//Themeimg password number tag
 		RegisterPanel.add(pw);

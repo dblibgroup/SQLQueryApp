@@ -10,6 +10,10 @@ import java.sql.Statement;
 
 public class Query{
 	Object a[][];
+	public void InitAdapter(String domain) {
+		
+	}
+	
 	public Object[][] ExecQuery(String sql, Connection conn) {
 			int row, col;
 			try {

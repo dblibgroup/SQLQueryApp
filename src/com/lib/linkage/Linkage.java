@@ -62,7 +62,6 @@ class MainPage implements ComponentListener, MouseListener{
 		title.add(logolabel);
 		frame.add(title, BorderLayout.NORTH);
 		operations = OperationTabInit(operations, frame);
-		frame.add(operations, BorderLayout.CENTER);
 		
 		o_width = frame.getWidth();
 		System.out.println("Width Now: "+ o_width);
@@ -145,6 +144,10 @@ class MainPage implements ComponentListener, MouseListener{
 		operation.add(search);
 		operation.add(entrance);
 		operation.addComponentListener(this);
+		
+		frame.add(operations, BorderLayout.CENTER);
+		frame.revalidate();
+		frame.repaint();
 		return operation;
 	}
 	

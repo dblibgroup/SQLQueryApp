@@ -60,13 +60,15 @@ public class Management implements MouseListener{
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		frame.remove(backui);
-		//frame.remove(inputpassword);
-		MainPage l = new MainPage();
-		l.OperationTabInit(operations, frame);
-		frame.add(operations, BorderLayout.CENTER);
+		frame.remove(operations);
+		frame.remove(inputpassword);
 		frame.revalidate();
 		frame.repaint();
-		
+		//frame.remove(inputpassword);
+		MainPage l = new MainPage();
+		operations = l.OperationTabInit(operations, frame);
+		frame.revalidate();
+		frame.repaint();
 	}
 
 	@Override
