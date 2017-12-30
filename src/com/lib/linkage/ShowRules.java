@@ -6,7 +6,7 @@ import java.awt.Font;
 import java.awt.event.*;
 import java.io.*;
 
-/* This is a page where rules are being showned 
+/* This is a page where rules are being shown
  * to new library users who attempt to register
  * borrow and return rights. 
  * 

@@ -2,16 +2,72 @@ package com.lib.linkage;
 
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.PreparedStatement;
 
 
 public class Query{
 	Object a[][];
 	public void InitAdapter(String domain) {
-		
+	}
+	/*
+	 * This fucntion is newly added by Zorrow
+	 * In order to user prepared statement to 
+	 * avoid most sql injections
+	 */
+	public Object[][] PsExecQuery(PreparedStatement pstmt){
+		int row, col;
+		try {
+			boolean isResultAvail = pstmt.execute();
+			if(isResultAvail) {
+				try {
+					//Since it is not a UPDATE SQL statement here, so it can be redone.
+					ResultSet r = pstmt.executeQuery();
+					ResultSetMetaData rm = r.getMetaData();
+					col = rm.getColumnCount();
+					r.last();
+					row = r.getRow();
+					System.out.println("There are " + row + " row(s).");
+					
+					if(row != -1) {
+						a = new Object[row][col];
+					}else {
+						a = new Object[0][0];
+						return a;
+					}			//IF row = -1 that means some error is occurred
+					
+					r.beforeFirst(); //Get the beforeFirst line so that when r.next() is executed the first line can be read
+					int m = 0;
+					while(r.next()) {
+						for(int show = 1; show <= col; show ++) {
+							a[m][show-1] = r.getString(show);
+						}
+						m++;
+					}
+				}
+				catch(SQLException se) {
+					se.printStackTrace();
+				}
+				return a;	
+			}else {
+				int updateCount = pstmt.getUpdateCount();
+				a = new Object[1][1];
+				String object = new String();
+				
+				if (updateCount == 1) object = " Row.";
+				else object = " Rows.";
+				a[0][0] = "The statement affected " 
+						+ updateCount + object;
+				return a;
+			}
+		}catch(Exception sqe) {
+			a = new Object[0][0];
+			return a;
+		}
 	}
 	
 	public Object[][] ExecQuery(String sql, Connection conn) {
@@ -49,12 +105,12 @@ public class Query{
 							return a;
 						}			//IF row = -1 that means some error is occurred
 	
-						System.out.println("We have already prepared the size of JTable");
-						System.out.println("Row = " + row);
-						System.out.println("Col = " + col);
+						//System.out.println("We have already prepared the size of JTable");
+						//System.out.println("Row = " + row);
+						//System.out.println("Col = " + col);
 						
-						statement = conn.createStatement();
-						r = statement.executeQuery(sql);
+						//statement = conn.createStatement();
+						//r = statement.executeQuery(sql);
 						int m = 0;
 						while(r.next()) {
 							for(int show = 1; show <= col; show ++) {
@@ -67,8 +123,7 @@ public class Query{
 						se.printStackTrace();
 					}
 					return a;	
-					}
-				else {
+				}else {
 					int updateCount = statement.getUpdateCount();
 					
 					a = new Object[1][1];
@@ -120,7 +175,7 @@ public class Query{
 				rs = s.executeQuery(sql);
 				rs.last();
 				int rows = rs.getRow();
-				System.out.println(rows);
+				System.out.println("There are " + rows + " row(s).");
 				//Since we are not connecting, we don't close it : conn.close();
 				return rows;
 			}else return 1;

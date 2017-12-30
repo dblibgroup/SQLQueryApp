@@ -247,14 +247,14 @@ class MainPage implements ComponentListener, MouseListener{
 		frame.revalidate();
 		frame.repaint();
 		  if(arg0.getSource() == borrow) {
-			  System.out.print("Borrow Mode Selected. " +
+			  System.out.println("Borrow Mode Selected. " +
 					  "Dropping Selection Menu");
 			  UserFrame uf = new UserFrame();
 			  uf.showFrame(frame);
 			  
 		  }
 		  if (arg0.getSource() == return_bb) {
-			  System.out.print("Return mode selected.");
+			  System.out.println("Return mode selected.");
 			  Return r = new Return();
 			  r.ReturnMode(frame);
 		  }
@@ -265,7 +265,10 @@ class MainPage implements ComponentListener, MouseListener{
 			  m.ShowPWUI(frame);
 		  }
 		  if(arg0.getSource() == entrance) {
-			   new ShowRules(frame);
+			  //new ShowRules(frame);
+			  //Register page will be shown here directly for testing purpose. Normally student have to pass the test first.
+			  NewStudRegister nsr = new NewStudRegister();
+			  nsr.showRegisterMenu(frame);
 		  }
 	}
 	@Override

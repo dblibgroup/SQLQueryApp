@@ -1,5 +1,5 @@
 package com.lib.linkage;
-
+import java.sql.*;  
 import javax.swing.*;
 import javax.swing.border.*;
 
@@ -8,7 +8,7 @@ import javax.swing.event.*;
 import java.awt.event.*;
 import java.awt.image.*;
 
-public class NewStudRegister implements DocumentListener,
+public class NewStudRegister implements ActionListener, DocumentListener,
 FocusListener, MouseListener{
 	ImageLoader il = new ImageLoader();
 	
@@ -42,6 +42,10 @@ FocusListener, MouseListener{
 	JPanel RegisterPanel = new JPanel(gbl);
 	
 	String adjustedstcard;
+	
+	//WARNING!!!: This block is newly added here by zorrow to add a REGISTER button
+	JLabel entercontain;
+	JButton Enter = new JButton("注册");
 	
 	public void showRegisterMenu(JFrame frame) {
 		this.frame = frame;
@@ -129,6 +133,16 @@ FocusListener, MouseListener{
 		password.setBorder(border);
 		RegisterPanel.add(password);
 		
+
+		//WARNING!!!: This block is newly added here by zorrow to add a REGISTER button
+		BufferedImage enterico = il.LoadImage("arrow_right.jpg");
+		ImageIcon entericon = new ImageIcon(enterico);
+		Image image = entericon.getImage();
+		image = image.getScaledInstance(32, 32, java.awt.Image.SCALE_SMOOTH);
+		entericon = new ImageIcon(image);
+		entercontain = new JLabel(entericon);
+		Enter.addActionListener(this);
+		frame.add(Enter, BorderLayout.SOUTH);
 		
 		frame.add(RegisterPanel,BorderLayout.CENTER);
 		frame.revalidate();
@@ -256,5 +270,89 @@ FocusListener, MouseListener{
 
 	@Override
 	public void mouseReleased(MouseEvent arg0) {}
-
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		//function trim() is used to avoid extra spaces typed by users which may lead to a mismatching
+		String sno = enteredsno.getText().trim();
+		String scard = enteredscard.getText().trim();
+		String sname = enteredname.getText().trim();
+		//function getPassword() is suggested rather than getText() for safety reasons
+		String passwd = new String(password.getPassword());
+		System.out.println("USERNAME: "+ sname + " PASSWORD: " + passwd + " Student ID: " + sno + " Card ID: " + scard + ".");
+		
+		//These validation rules haven't been considered thoroughly so it needs to be improved.
+		if(sno.length() != 10 || !sno.matches("^\\d+$"))      //For instance, the string '2015051471' has 10 characters.
+		{                                                     //And it should be numerical.
+			System.out.println("学号输入有误，请重新尝试！");
+		}else if(scard.length() > 8 || !scard.matches("^\\d+$")){
+			System.out.println("卡号输入有误，请重新尝试！");
+		}else if(passwd.length() < 6 || passwd.matches("^\\d+$") || passwd.matches("^[a-zA-Z]+$")){ 
+			//The password should be long enough(at least 6) and contains both numbers and letters(or any other characters).
+			System.out.println("密码强度较低，请增加密码复杂度！");
+		}else if(sname == null || (!sname.matches("[\u4e00-\u9fa5]{2,}") && !sname.matches("^[a-zA-Z]+$"))){
+			//The name should be Chinese words or letters only.
+			System.out.println("姓名输入有误，请重新尝试！");
+		}else{
+			System.out.println("Validation test passed.");
+		}
+		
+		//check if the user exists
+		Object rs[][] = null;
+		Connection conn = DbConnection.DbConnect();
+		try{
+			Query usrQuery = new Query();
+			String checkSql = "SELECT * FROM stuInfo WHERE stuID = ?  OR cardID = ?";
+		    PreparedStatement pstmt = null;
+	 	    pstmt = (PreparedStatement) conn.prepareStatement(checkSql,
+	 	    		  ResultSet.TYPE_SCROLL_INSENSITIVE, 
+	 	    		  ResultSet.CONCUR_READ_ONLY);       //It is not suggested to do so in large Result sets.
+		    pstmt.setString(1, sno);
+		    pstmt.setString(2, scard);
+			rs = usrQuery.PsExecQuery(pstmt);
+		} catch (SQLException se) {
+			se.printStackTrace();
+		}
+		
+		//The code below is to find out if there are any data retrieved from the database
+		if(rs == null || rs.length == 0 || (rs.length == 1 && rs[0].length == 0)){
+			System.out.println("学生信息录入确认！");
+			//THen we just save the form into the database.
+			try{
+				Query usrQuery = new Query();
+			    PreparedStatement pstmt = null;
+			    
+				String stuSql = "INSERT INTO stuInfo(stuID,stuName,cardID) values(?,?,?)";
+		 	    pstmt = (PreparedStatement) conn.prepareStatement(stuSql,
+		 	    		  ResultSet.TYPE_SCROLL_INSENSITIVE, 
+		 	    		  ResultSet.CONCUR_READ_ONLY);
+			    pstmt.setString(1, sno);
+		  	    pstmt.setString(2, sname);
+			    pstmt.setString(3, scard);			
+			    rs = usrQuery.PsExecQuery(pstmt);
+			    
+			    String userSql = "INSERT INTO userInfo(stuID, password) values(?,?)";
+		 	    pstmt = (PreparedStatement) conn.prepareStatement(userSql,
+		 	    		  ResultSet.TYPE_SCROLL_INSENSITIVE, 
+		 	    		  ResultSet.CONCUR_READ_ONLY);
+		 	    pstmt.setString(1, sno);
+		 	    pstmt.setString(2, MD5.getEncryptedPwd(passwd));
+			    rs = usrQuery.PsExecQuery(pstmt);
+			    
+			    //Here should turn to ANOTHER PAGE
+			    
+			    
+			} catch (SQLException sqle){
+				sqle.printStackTrace();
+		    } catch (Exception ee){
+		    	ee.printStackTrace();
+		    }
+		}else{
+			System.out.println("该学生或该卡的信息已经登记！");
+			//Some ERROR MESSAGE should be shown below.
+			
+			
+		}
+		return; 
+	}
 }

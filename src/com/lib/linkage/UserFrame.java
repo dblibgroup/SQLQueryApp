@@ -4,9 +4,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.*;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.RSAKeyGenParameterSpec;
+
 import javax.swing.*;
 import javax.swing.event.*;
 
+import java.sql.*;
 public class UserFrame implements ActionListener, DocumentListener{
 	GridBagLayout gbl = new GridBagLayout();
 	JPanel login = new JPanel(gbl);
@@ -94,14 +99,65 @@ public class UserFrame implements ActionListener, DocumentListener{
 		if(e.getSource() == Enter) {
 			// SQL SHOULD BE HERE INSTEAD. The coding below is for
 			// testing purpose
-			String uname = username.getText();
-			System.out.println("The name filled in is: " + uname);
+			//String uname = username.getText();
+			//System.out.println("The name filled in is: " + uname);
 			
+			//function trim() is used to avoid extra spaces typed by users which may lead to a mismatching
+			String uname = username.getText().trim();
+			//function getPassword() is suggested rather than getText() for safety reasons
+			String passwd = new String(password.getPassword());
+			System.out.println("username: "+ uname + " password: " + passwd);
+
+			Object rs[][] = null;
+			try{
+				//check if the user exists
+				Query usrQuery = new Query();
+				Connection conn = DbConnection.DbConnect();
+				String sql = "SELECT * FROM userInfo WHERE stuID = ?";
+			    PreparedStatement pstmt = null;
+		 	    pstmt = (PreparedStatement) conn.prepareStatement(sql,
+		 	    		  ResultSet.TYPE_SCROLL_INSENSITIVE, 
+		 	    		  ResultSet.CONCUR_READ_ONLY);       //It is not suggested to do so in large Result sets.
+			    pstmt.setString(1, uname);
+				rs = usrQuery.PsExecQuery(pstmt);
+			} catch (SQLException se){
+			    se.printStackTrace();
+		    }
+			
+			//The code below is to find out if there are any data retrieved from the database
+			if(rs == null || rs.length == 0 || (rs.length == 1 && rs[0].length == 0)){
+				System.out.println("不存在该学生！");
+			}else{
+				for(int i = 0; i < rs.length; i++){
+					String pwdInDb = String.valueOf(rs[i][2]);     //rs[i][2] relates to the password
+					try{
+						if(MD5.validPassword(passwd, pwdInDb)){
+							System.out.println("密码正确！");
+							//Since the login have been succeeded, THE PAGE FOR CODE-SCANNING should be shown.
+							
+						}else{
+							System.out.println("密码错误！");
+							//Leave a error message on the screen and wait for another input.
+							
+						}
+					} catch (Exception me){
+						me.printStackTrace();
+					}
+				}
+				/*
+				//Check the Object array for testing purpose
+				for(int i = 0; i < rs.length; i++){
+					for(int j = 0; j < rs[i].length; j++){
+						System.out.print(rs[i][j] + " ");
+					}
+				}
+				*/
+			}
 		}
-		
-	
 	}
-	public void changedUpdate(DocumentEvent arg0) {}
+	public void changedUpdate(DocumentEvent arg0) {
+		
+	}
 	public void insertUpdate(DocumentEvent arg0) {
 		//System.out.println("Changing text. Resizing...");   //For testing purpose
 		frame.revalidate();
