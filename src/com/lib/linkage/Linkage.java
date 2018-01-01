@@ -216,6 +216,10 @@ class MainPage implements ComponentListener, MouseListener{
 			administration.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 			administration.setBackground(Color.decode("#005cff"));
 		}
+		else if(arg0.getSource() == search) {
+			search.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			search.setBackground(Color.decode("#005cff"));
+		}
 	}
 	@Override
 	public void mouseExited(MouseEvent arg0) {
@@ -269,6 +273,10 @@ class MainPage implements ComponentListener, MouseListener{
 			  //Register page will be shown here directly for testing purpose. Normally student have to pass the test first.
 			  NewStudRegister nsr = new NewStudRegister();
 			  nsr.showRegisterMenu(frame);
+		  }
+		  if(arg0.getSource() == search) {
+			  Search s = new Search();
+			  s.startSearchFrame(frame);
 		  }
 	}
 	@Override
