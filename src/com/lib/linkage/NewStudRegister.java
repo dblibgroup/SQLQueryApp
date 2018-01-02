@@ -340,7 +340,8 @@ FocusListener, MouseListener{
 			    rs = usrQuery.PsExecQuery(pstmt);
 			    
 			    //Here should turn to ANOTHER PAGE
-			    
+			    ShowMenu sm = new ShowMenu();
+			    sm.OperationTabInit(frame);
 			    
 			} catch (SQLException sqle){
 				sqle.printStackTrace();

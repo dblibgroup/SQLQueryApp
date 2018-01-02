@@ -35,7 +35,7 @@ public class ShowMenu implements ComponentListener, MouseListener{
 	JLabel lhint = new JLabel();
 	JLabel logolabel;
 	JPanel title = new JPanel();
-	JPanel operations = new JPanel();
+	JPanel operation = new JPanel();
 	JLabel borrow, return_bb, administration, search, entrance;
 	JButton eng = new JButton("ENG");
 	JButton chinese = new JButton();
@@ -67,7 +67,7 @@ public class ShowMenu implements ComponentListener, MouseListener{
 		title.add(lhint);
 		title.add(logolabel);
 		frame.add(title, BorderLayout.NORTH);
-		operations = OperationTabInit(operations, frame);
+		operation = OperationTabInit(frame);
 		
 		o_width = frame.getWidth();
 		System.out.println("Width Now: "+ o_width);
@@ -77,7 +77,7 @@ public class ShowMenu implements ComponentListener, MouseListener{
 		frame.revalidate();
 		frame.repaint();
 	}
-	public JPanel OperationTabInit (JPanel operation, JFrame frame) {
+	public JPanel OperationTabInit (JFrame frame) {
 		this.frame = frame;
 		operation.setLayout(new GridLayout(0,3));
 		//Load custom Borrow ImageButton
@@ -151,7 +151,7 @@ public class ShowMenu implements ComponentListener, MouseListener{
 		operation.add(entrance);
 		operation.addComponentListener(this);
 		
-		frame.add(operations, BorderLayout.CENTER);
+		frame.add(operation, BorderLayout.CENTER);
 		frame.revalidate();
 		frame.repaint();
 		return operation;
@@ -249,7 +249,7 @@ public class ShowMenu implements ComponentListener, MouseListener{
 		 * in any situations. So remove them at
 		 * once.
 		*/
-		frame.remove(operations);
+		frame.remove(operation);
 		frame.revalidate();
 		frame.repaint();
 		  if(arg0.getSource() == borrow) {
