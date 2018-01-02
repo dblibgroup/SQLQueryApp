@@ -34,15 +34,17 @@ public class ManagementStudio implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {
+		frame.remove(operation);
+		frame.revalidate();
+		frame.repaint();
 		if(ae.getSource() == regbooks) {
-		//	BookOperation bo = new BookOperation();
+			BookAdding ba = new BookAdding();
+			ba.InitAdding(frame);
 			
 		}
 		if(ae.getSource() == revert) {
 			ShowMenu sm = new ShowMenu();
-			frame.remove(operation);
-			frame.revalidate();
-			frame.repaint();
+
 			sm.OperationTabInit(frame);
 		}
 		if(ae.getSource() == exit) {
