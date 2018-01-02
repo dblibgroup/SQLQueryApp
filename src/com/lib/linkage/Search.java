@@ -89,8 +89,21 @@ public class Search implements ActionListener {
 			rs = uq.PsExecQuery(pstmt);
 			if(rs == null || rs.length == 0 || 
 				(rs.length == 1 && rs[0].length == 0)) {
+				/* Remove all the previous JComponents, 
+				 * then repaint all the elements
+				 */
+				resultPanel.removeAll();
 				resultPanel.add(t_noresult);
+				resultPanel.revalidate();
+				resultPanel.repaint();
 			}else {
+				/* Remove all the previous JComponents, 
+				 * then repaint all the elements
+				 */
+				resultPanel.removeAll();
+				resultPanel.revalidate();
+				resultPanel.repaint();
+				
 				gbc.gridwidth = GridBagConstraints.REMAINDER;
 				gb.setConstraints(t_picname, gbc);
 				resultPanel.add(t_isbn);
@@ -125,7 +138,7 @@ public class Search implements ActionListener {
 							if(rsp == null || rsp.length == 0 || (rsp.length == 1 && rsp[0].length == 0)){
 								//System.out.println("抱歉，该书籍尚未上架！");
 								String notavail = "该书籍未上架或全部借出";
-								substring += "</br>" + notavail;
+								substring += "<br>" + notavail + "</html>";
 									
 							}else{
 								for(int k = 0; k < rsp.length; k++){
@@ -133,7 +146,7 @@ public class Search implements ActionListener {
 												" 的书数量为：" + rsp[j][3] + " 本"); */
 									String shelfnum = "书架号: " + rsp[k][0] + "." + rsp[k][1];
 									String amount = "馆藏数量: " + rsp[k][3];
-									substring += "</br></br>"+shelfnum +"</br>" + amount + "</html>";
+									substring += "<br><br>"+shelfnum +"<br>" + amount + "</html>";
 									rs[i][j] = substring;
 								}
 							}
