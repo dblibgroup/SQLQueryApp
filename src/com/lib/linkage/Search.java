@@ -14,6 +14,7 @@ public class Search implements ActionListener {
 	JPanel searchPanel, resultPanel, panelgroup;
 	JButton search = new JButton("搜索");
 	JLabel t_name = new JLabel("书名");
+	JLabel t_type = new JLabel("类别");
 	JLabel t_isbn = new JLabel("ISBN");
 	JLabel t_author = new JLabel("作者");
 	JLabel t_publisher = new JLabel("出版社");
@@ -83,7 +84,13 @@ public class Search implements ActionListener {
 				(rs.length == 1 && rs[0].length == 0)) {
 				resultPanel.add(t_noresult);
 			}else {
-				//Do Nothing
+				resultPanel.add(t_isbn);
+				resultPanel.add(t_type);
+				resultPanel.add(t_name);
+				resultPanel.add(t_author);
+				resultPanel.add(t_publisher);
+				resultPanel.add(t_intro);
+				resultPanel.add(t_picname);
 			}
 		}catch(SQLException se) {}
  		
