@@ -269,10 +269,10 @@ class MainPage implements ComponentListener, MouseListener{
 			  m.ShowPWUI(frame);
 		  }
 		  if(arg0.getSource() == entrance) {
-			  //new ShowRules(frame);
+			  new ShowRules(frame);
 			  //Register page will be shown here directly for testing purpose. Normally student have to pass the test first.
-			  NewStudRegister nsr = new NewStudRegister();
-			  nsr.showRegisterMenu(frame);
+			  //NewStudRegister nsr = new NewStudRegister();
+			  //nsr.showRegisterMenu(frame);
 		  }
 		  if(arg0.getSource() == search) {
 			  Search s = new Search();

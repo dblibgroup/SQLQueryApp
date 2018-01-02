@@ -31,7 +31,7 @@ public class Query{
 					col = rm.getColumnCount();
 					r.last();
 					row = r.getRow();
-					System.out.println("There are " + row + " row(s).");
+					//System.out.println("There are " + row + " row(s).");
 					
 					if(row != -1) {
 						a = new Object[row][col];

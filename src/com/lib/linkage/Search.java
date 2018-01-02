@@ -19,7 +19,7 @@ public class Search implements ActionListener {
 	JLabel t_author = new JLabel("作者");
 	JLabel t_publisher = new JLabel("出版社");
 	JLabel t_intro = new JLabel("简介");
-	JLabel t_picname = new JLabel("图片编号");
+	JLabel t_picname = new JLabel("馆藏信息");
 	JLabel t_noresult = new JLabel("无书籍查询结果");
 	
 	//Init ComoboBox
@@ -144,9 +144,9 @@ public class Search implements ActionListener {
 								for(int k = 0; k < rsp.length; k++){
 									/*System.out.println("书架号：" + rsp[j][0] + "." + rsp[j][1] + " 上，ISBN为："+ rsp[j][2] + 
 												" 的书数量为：" + rsp[j][3] + " 本"); */
-									String shelfnum = "书架号: " + rsp[k][0] + "." + rsp[k][1];
-									String amount = "馆藏数量: " + rsp[k][3];
-									substring += "<br><br>"+shelfnum +"<br>" + amount + "</html>";
+									String shelfnum = "书架号: " + rsp[k][0];
+									String amount = "馆藏数量: " + rsp[k][2];
+									substring += ""+shelfnum +" " + amount + "";
 									rs[i][j] = substring;
 								}
 							}

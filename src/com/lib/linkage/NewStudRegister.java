@@ -295,64 +295,65 @@ FocusListener, MouseListener{
 			System.out.println("姓名输入有误，请重新尝试！");
 		}else{
 			System.out.println("Validation test passed.");
-		}
-		
-		//check if the user exists
-		Object rs[][] = null;
-		Connection conn = DbConnection.DbConnect();
-		try{
-			Query usrQuery = new Query();
-			String checkSql = "SELECT * FROM stuInfo WHERE stuID = ?  OR cardID = ?";
-		    PreparedStatement pstmt = null;
-	 	    pstmt = (PreparedStatement) conn.prepareStatement(checkSql,
-	 	    		  ResultSet.TYPE_SCROLL_INSENSITIVE, 
-	 	    		  ResultSet.CONCUR_READ_ONLY);       //It is not suggested to do so in large Result sets.
-		    pstmt.setString(1, sno);
-		    pstmt.setString(2, scard);
-			rs = usrQuery.PsExecQuery(pstmt);
-		} catch (SQLException se) {
-			se.printStackTrace();
-		}
-		
-		//The code below is to find out if there are any data retrieved from the database
-		if(rs == null || rs.length == 0 || (rs.length == 1 && rs[0].length == 0)){
-			System.out.println("学生信息录入确认！");
-			//THen we just save the form into the database.
+			//check if the user exists
+			Object rs[][] = null;
+			Connection conn = DbConnection.DbConnect();
 			try{
 				Query usrQuery = new Query();
+				String checkSql = "SELECT * FROM stuInfo WHERE stuID = ?  OR cardID = ?";
 			    PreparedStatement pstmt = null;
-			    
-				String stuSql = "INSERT INTO stuInfo(stuID,stuName,cardID) values(?,?,?)";
-		 	    pstmt = (PreparedStatement) conn.prepareStatement(stuSql,
+		 	    pstmt = (PreparedStatement) conn.prepareStatement(checkSql,
 		 	    		  ResultSet.TYPE_SCROLL_INSENSITIVE, 
-		 	    		  ResultSet.CONCUR_READ_ONLY);
+		 	    		  ResultSet.CONCUR_READ_ONLY);       //It is not suggested to do so in large Result sets.
 			    pstmt.setString(1, sno);
-		  	    pstmt.setString(2, sname);
-			    pstmt.setString(3, scard);			
-			    rs = usrQuery.PsExecQuery(pstmt);
-			    
-			    String userSql = "INSERT INTO userInfo(stuID, password) values(?,?)";
-		 	    pstmt = (PreparedStatement) conn.prepareStatement(userSql,
-		 	    		  ResultSet.TYPE_SCROLL_INSENSITIVE, 
-		 	    		  ResultSet.CONCUR_READ_ONLY);
-		 	    pstmt.setString(1, sno);
-		 	    pstmt.setString(2, MD5.getEncryptedPwd(passwd));
-			    rs = usrQuery.PsExecQuery(pstmt);
-			    
-			    //Here should turn to ANOTHER PAGE
-			    ShowMenu sm = new ShowMenu();
-			    sm.OperationTabInit(frame);
-			    
-			} catch (SQLException sqle){
-				sqle.printStackTrace();
-		    } catch (Exception ee){
-		    	ee.printStackTrace();
-		    }
-		}else{
-			System.out.println("该学生或该卡的信息已经登记！");
-			//Some ERROR MESSAGE should be shown below.
+			    pstmt.setString(2, scard);
+				rs = usrQuery.PsExecQuery(pstmt);
+			} catch (SQLException se) {
+				se.printStackTrace();
+			}
 			
-			
+			//The code below is to find out if there are any data retrieved from the database
+			if(rs == null || rs.length == 0 || (rs.length == 1 && rs[0].length == 0)){
+				System.out.println("学生信息录入确认！");
+				//THen we just save the form into the database.
+				try{
+					Query usrQuery = new Query();
+				    PreparedStatement pstmt = null;
+				    
+					String stuSql = "INSERT INTO stuInfo(stuID,stuName,cardID) values(?,?,?)";
+			 	    pstmt = (PreparedStatement) conn.prepareStatement(stuSql,
+			 	    		  ResultSet.TYPE_SCROLL_INSENSITIVE, 
+			 	    		  ResultSet.CONCUR_READ_ONLY);
+				    pstmt.setString(1, sno);
+			  	    pstmt.setString(2, sname);
+				    pstmt.setString(3, scard);			
+				    rs = usrQuery.PsExecQuery(pstmt);
+				    
+				    String userSql = "INSERT INTO userInfo(stuID, password) values(?,?)";
+			 	    pstmt = (PreparedStatement) conn.prepareStatement(userSql,
+			 	    		  ResultSet.TYPE_SCROLL_INSENSITIVE, 
+			 	    		  ResultSet.CONCUR_READ_ONLY);
+			 	    pstmt.setString(1, sno);
+			 	    pstmt.setString(2, MD5.getEncryptedPwd(passwd));
+				    rs = usrQuery.PsExecQuery(pstmt);
+				    
+				    //Here should turn to ANOTHER PAGE
+				    ShowMenu sm = new ShowMenu();
+					frame.remove(RegisterPanel);
+					frame.remove(Enter);
+					frame.revalidate();
+					frame.repaint();
+					sm.OperationTabInit(frame);
+				    
+				} catch (SQLException sqle){
+					sqle.printStackTrace();
+			    } catch (Exception ee){
+			    	ee.printStackTrace();
+			    }
+			}else{
+				System.out.println("该学生或该卡的信息已经登记！");
+				//Some ERROR MESSAGE should be shown below.
+			}
 		}
 		return; 
 	}

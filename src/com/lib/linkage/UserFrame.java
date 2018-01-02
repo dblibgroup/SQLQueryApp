@@ -22,10 +22,8 @@ public class UserFrame implements ActionListener, DocumentListener{
 	JLabel entercontain;
 	JTextField username = new JTextField();
 	JPasswordField password = new JPasswordField();
-	JLabel errormsg = new JLabel("");
 	
 	public void showFrame(JFrame frame) {
-		errormsg.setForeground(Color.RED);
 		this.frame = frame;
 		JLabel usershow, ushow, pshow, hint;
 		ushow = new JLabel("用户名：");
@@ -72,7 +70,6 @@ public class UserFrame implements ActionListener, DocumentListener{
 		gc.anchor = GridBagConstraints.CENTER;
 		gbl.setConstraints(entercontain, gc);
 		login.add(entercontain);
-		login.add(errormsg);
 		username.setOpaque(false);
 		username.getDocument().addDocumentListener(this);
 		
@@ -84,7 +81,6 @@ public class UserFrame implements ActionListener, DocumentListener{
 		Enter.addActionListener(this);
 		String fontname = login.getFont().getFontName();
 		login.setFont(new Font(fontname, Font.PLAIN, 18));
-		
 		frame.add(login, BorderLayout.CENTER);
 		frame.add(Enter, BorderLayout.SOUTH);
 		frame.revalidate();
@@ -100,6 +96,9 @@ public class UserFrame implements ActionListener, DocumentListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		JLabel warning1 = new JLabel("不存在该学生！");
+		JLabel warning2 = new JLabel("密码错误！");
+		this.frame = frame;
 		if(e.getSource() == Enter) {
 			// SQL SHOULD BE HERE INSTEAD. The coding below is for
 			// testing purpose
@@ -125,13 +124,13 @@ public class UserFrame implements ActionListener, DocumentListener{
 			    pstmt.setString(1, uname);
 				rs = usrQuery.PsExecQuery(pstmt);
 			} catch (SQLException se){
-				errormsg.setText("Exception Thrown");
 			    se.printStackTrace();
 		    }
 			
 			//The code below is to find out if there are any data retrieved from the database
 			if(rs == null || rs.length == 0 || (rs.length == 1 && rs[0].length == 0)){
-				errormsg.setText("不存在该学生！");
+				System.out.println("不存在该学生！");
+				frame.add(warning1, BorderLayout.SOUTH);
 			}else{
 				for(int i = 0; i < rs.length; i++){
 					String pwdInDb = String.valueOf(rs[i][2]);     //rs[i][2] relates to the password
@@ -140,10 +139,14 @@ public class UserFrame implements ActionListener, DocumentListener{
 							System.out.println("密码正确！");
 							//Since the login have been succeeded, THE PAGE FOR CODE-SCANNING should be shown.
 							Return r = new Return ();
+							frame.remove(login);
+							frame.remove(Enter);
+							frame.revalidate();
+							frame.repaint();
 							r.BorrowMode(frame);
 							
 						}else{
-							errormsg.setText("密码错误！");
+							System.out.println("密码错误！");
 							//Leave a error message on the screen and wait for another input.
 							
 						}

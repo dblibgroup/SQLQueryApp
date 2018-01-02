@@ -15,9 +15,8 @@ public class BookAdding implements ActionListener{
 	
 	int shelf_NO, shelf_order, bookNum;
 	JLabel shelf = new JLabel("书架编号：");
-	JLabel l_booknum = new JLabel("书籍编号: ");
+	JLabel l_booknum = new JLabel("书籍数量: ");
 	JTextField shelfno = new JTextField(10);
-	JTextField shelforder = new JTextField(10);
 	JTextField booknum = new JTextField(10);
 	
 	String ISBN, type, name, author, press, intro ;
@@ -36,7 +35,6 @@ public class BookAdding implements ActionListener{
 		this.frame = frame;
 		shelfpanel.add(shelf);
 		shelfpanel.add(shelfno);
-		shelfpanel.add(shelforder);
 		shelfpanel.add(l_booknum);
 		shelfpanel.add(booknum);
 		
@@ -101,18 +99,11 @@ public class BookAdding implements ActionListener{
 		Object rsp[][] = null;
 		Connection conn = DbConnection.DbConnect();
 	    PreparedStatement pstmt = null;
-	    
 	    try {
 	    	/*
 	    	 *  Deprecated as they will not be shown in GUI
 	    	 *  
-	    		String ISBN = s.next();
-			String type = s.next();
-			String name = s.next();
-			String author = s.next();
-			String press = s.next();
-			String intro = s.next();
-		*/
+	    	 */
 	    	String ISBN = f_isbn.getText();
 	    	String type = f_type.getText();
 	    	String name = f_name.getText();
@@ -121,7 +112,7 @@ public class BookAdding implements ActionListener{
 	    	String intro = f_intro.getText();
 	    	if(ISBN == null || type == null || name == null || author == null || press == null)  
 			{                                                  
-				msg.setText("必须填写完整信息！");
+				System.out.println("必须填写完整信息！");
 			}else{
 				//This is for testing purpose only.
 				System.out.println("ISBN: "+ ISBN + " TYPE: " + type + " NAME: " + name + " AUTHOR: " + author 
@@ -145,12 +136,13 @@ public class BookAdding implements ActionListener{
 			} catch (SQLException se) {
 				se.printStackTrace();
 			}
+	    	
 	    	if(rs == null || rs.length == 0 || (rs.length == 1 && rs[0].length == 0)){
-				msg.setText("书籍录入信息失败，请联系管理员解决！");
+				action.setText("书籍录入信息失败，请联系管理员解决！");
 				//Some ERROR MESSAGE should be shown below.
 			}else{
 				if(!is_avail.isSelected()){
-					msg.setText("书籍成功添加，并未上架。");
+					action.setText("书籍成功添加，并未上架。");
 				}else{
 					
 					//THen we just save the form into the database.
@@ -163,19 +155,17 @@ public class BookAdding implements ActionListener{
 					    int bookNum = s.nextInt();
 					    */
 					    shelf_NO = Integer.parseInt(shelfno.getText());
-					    shelf_order = Integer.parseInt(shelforder.getText());
 					    bookNum = Integer.parseInt(booknum.getText());
 					    
-						String chkSql = "SELECT * FROM shelfInfo WHERE shelfNO = ? AND shelfOrder = ?";
+						String chkSql = "SELECT * FROM shelfInfo WHERE shelfNO = ?";
 				 	    pstmt = (PreparedStatement) conn.prepareStatement(chkSql,
 				 	    		  ResultSet.TYPE_SCROLL_INSENSITIVE, 
 				 	    		  ResultSet.CONCUR_READ_ONLY);
 					    pstmt.setInt(1, shelf_NO);
-				  	    pstmt.setInt(2, shelf_order);
 					    rss = usrQuery.PsExecQuery(pstmt);
 					    
 						if(rss == null || rss.length == 0 || (rss.length == 1 && rss[0].length == 0)){
-							msg.setText("不存在该书架！请重新输入！");
+							System.out.println("不存在该书架！请重新输入！");
 							//Some ERROR MESSAGE should be shown below.
 							
 						}else{
@@ -183,22 +173,25 @@ public class BookAdding implements ActionListener{
 								usrQuery = new Query();
 								pstmt = null;
 								
-								String istSql = "INSERT INTO shelf_book(shelfNO,shelfOrder,ISBN,num) values(?,?,?,?)";
+								String istSql = "INSERT INTO shelf_book(shelfNO,ISBN,num) values(?,?,?)";
 						 	    pstmt = (PreparedStatement) conn.prepareStatement(istSql,
 						 	    		  ResultSet.TYPE_SCROLL_INSENSITIVE, 
 						 	    		  ResultSet.CONCUR_READ_ONLY);
 							    pstmt.setInt(1, shelf_NO);
-						  	    pstmt.setInt(2, shelf_order);
-						  	    pstmt.setString(3, ISBN);
-						  	    pstmt.setInt(4, bookNum);
+						  	    pstmt.setString(2, ISBN);
+						  	    pstmt.setInt(3, bookNum);
 						  	    
 							    rsp = usrQuery.PsExecQuery(pstmt);
 							    
 							    if(rsp == null || rsp.length == 0 || (rsp.length == 1 && rsp[0].length == 0)){
-									msg.setText("书籍上架失败，请联系管理员解决！");
+									System.out.println("书籍上架失败，请联系管理员解决！");
 									//Some ERROR MESSAGE should be shown below.
 							    }else{
-									msg.setText("书籍上架成功！");
+									System.out.println("书籍上架成功！");
+
+									frame.remove(wrapper);
+									ManagementStudio ms = new ManagementStudio();
+									ms.showFrame(frame);
 							    }
 								} catch (SQLException sqlee) {
 									sqlee.printStackTrace();
