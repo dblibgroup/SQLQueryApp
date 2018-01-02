@@ -3,6 +3,10 @@ package com.lib.linkage;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.*;
 
@@ -98,12 +102,48 @@ public class Management implements MouseListener, ActionListener{
 		String uname = username.getText();
 		String pw = new String(password.getPassword());
 		//Should be verified later. Raynold: hardcoded here
-		System.out.println("password " +pw);
-		if(uname.equals("root") && pw.equals("123456")) {
-			System.out.println("The password is correct. Showing management studio below");
-			frame.remove(container);
-			ManagementStudio ms = new ManagementStudio();
-			ms.showFrame(frame);
+		System.out.println("username: " + uname + " password : " +pw);
+
+		Object rs[][] = null;
+		try{
+			//check if the user exists
+			Query usrQuery = new Query();
+			Connection conn = DbConnection.DbConnect();
+			String sql = "SELECT * FROM administrator WHERE adminID = ?";
+		    PreparedStatement pstmt = null;
+	 	    pstmt = (PreparedStatement) conn.prepareStatement(sql,
+	 	    		  ResultSet.TYPE_SCROLL_INSENSITIVE, 
+	 	    		  ResultSet.CONCUR_READ_ONLY);       //It is not suggested to do so in large Result sets.
+		    pstmt.setString(1, uname);
+			rs = usrQuery.PsExecQuery(pstmt);
+			
+			//The code below is to find out if there are any data retrieved from the database
+			if(rs == null || rs.length == 0 || (rs.length == 1 && rs[0].length == 0)){
+				System.out.println("管理员不存在，请先获取权限！");
+			}else{
+				for(int i = 0; i < rs.length; i++){
+					String pwdInDb = String.valueOf(rs[i][1]);     //rs[i][2] relates to the password
+					try{
+						if(MD5.validPassword(pw, pwdInDb)){
+							System.out.println("密码正确，转向ManagementStudio");
+							frame.remove(container);
+							ManagementStudio ms = new ManagementStudio();
+							ms.showFrame(frame);
+							
+						}else{
+							System.out.println("密码错误！");
+							//Leave a error message on the screen and wait for another input.
+							
+						}
+					} catch (Exception me){
+						me.printStackTrace();
+					}
+				}
+			}
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 		
 	}

@@ -3,6 +3,10 @@ package com.lib.linkage;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class Return implements ActionListener{
 	JFrame frame;
@@ -53,12 +57,75 @@ public class Return implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {
-		//String barcode_t = barcode.getText();
-		//String sql = null;
-		//delete the record from Student Table
-		//Query uq = new Query();
+		//set campus = 1 as default
+		String ISBN = barcode.getText();
+		String stuID = "2015051471";
+		System.out.println("stuID: " + stuID + " ISBN: " + ISBN);
 		
-		
+		Object rs[][] = null;
+		Object rsd[][] = null;
+		Object rsu[][] = null;
+		Connection conn = DbConnection.DbConnect();
+	    PreparedStatement pstmt = null;
+	    
+	    //Search if there are records about borrowing 
+		try{
+			String schSql = "SELECT * FROM stu_book WHERE ISBN = ? AND stuID = ?";
+			Query usrQuery = new Query();
+		    pstmt = null;
+	 	    pstmt = (PreparedStatement) conn.prepareStatement(schSql,
+	 	    		  ResultSet.TYPE_SCROLL_INSENSITIVE, 
+	 	    		  ResultSet.CONCUR_READ_ONLY);       //It is not suggested to do so in large Result sets.
+		    pstmt.setString(1, ISBN);
+		    pstmt.setString(2, stuID);
+			rs = usrQuery.PsExecQuery(pstmt);
+			
+			//Delete the borrowing record
+			if(rs == null || rs.length == 0 || (rs.length == 1 && rs[0].length == 0)){
+				System.out.println("没有该借书记录或ISBN编号输入错误！");
+				//Some ERROR MESSAGE should be shown below.
+			}else{
+				int shelfNO = Integer.parseInt((String) rs[0][2]);
+				System.out.println("书架号为：" + shelfNO);
+				String delSql = "DELETE FROM stu_book WHERE ISBN = ? AND stuID = ?";
+				usrQuery = new Query();
+			    pstmt = null;
+		 	    pstmt = (PreparedStatement) conn.prepareStatement(delSql,
+		 	    		  ResultSet.TYPE_SCROLL_INSENSITIVE, 
+		 	    		  ResultSet.CONCUR_READ_ONLY);       //It is not suggested to do so in large Result sets.
+			    pstmt.setString(1, ISBN);
+			    pstmt.setString(2, stuID);
+				rsd = usrQuery.PsExecQuery(pstmt);
+				
+				//Adding books to the bookshelf
+				if(rsd == null || rsd.length == 0 || (rsd.length == 1 && rsd[0].length == 0)){
+					System.out.println("还书过程出错，请联系管理员！");
+					//Some ERROR MESSAGE should be shown below.
+					//If any error occurs here, that must be the unexpected error from the database.
+				}else{
+					//Add info to the shelf_book indicating that there'll be a book to that shelf
+					String uptSql = "UPDATE shelf_book set num = num + 1 WHERE shelfNO = ? AND ISBN = ? ";
+					usrQuery = new Query();
+				    pstmt = null;
+			 	    pstmt = (PreparedStatement) conn.prepareStatement(uptSql,
+			 	    		  ResultSet.TYPE_SCROLL_INSENSITIVE, 
+			 	    		  ResultSet.CONCUR_READ_ONLY);       //It is not suggested to do so in large Result sets.
+				    pstmt.setInt(1, shelfNO);
+				    pstmt.setString(2, ISBN);
+				    rsu = usrQuery.PsExecQuery(pstmt);
+
+					if(rsu == null || rsu.length == 0 || (rsu.length == 1 && rsu[0].length == 0)){
+						System.out.println("还书过程出错，请联系管理员！");
+						//Some ERROR MESSAGE should be shown below.
+					}else{
+						System.out.println("还书成功！");
+						
+					}
+				}
+			}
+		} catch (SQLException e){
+			e.printStackTrace();
+		}
 	}
 	
 }
