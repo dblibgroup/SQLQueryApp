@@ -132,10 +132,12 @@ public class Search implements ActionListener {
 									String shelfnum = "书架号: " + rsp[j][0] + "." + rsp[j][1];
 									String amount = "馆藏数量: " + rsp[j][3];
 									substring += "\n"+shelfnum +"\n" + amount;
+									rs[i][j] = substring;
 								}
 							}
 						}
 						//System.out.print(rs[i][j] + " ");
+						
 						if(j < rs[i].length - 1) resultPanel.add(new JLabel(rs[i][j].toString()));
 						else {
 							JLabel llabel = new JLabel(rs[i][j].toString());
