@@ -134,6 +134,8 @@ public class UserFrame implements ActionListener, DocumentListener{
 						if(MD5.validPassword(passwd, pwdInDb)){
 							System.out.println("密码正确！");
 							//Since the login have been succeeded, THE PAGE FOR CODE-SCANNING should be shown.
+							Return r = new Return ();
+							r.BorrowMode(frame);
 							
 						}else{
 							System.out.println("密码错误！");

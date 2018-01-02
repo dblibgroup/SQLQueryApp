@@ -14,6 +14,7 @@ public class Return implements ActionListener{
 	GridBagConstraints gc = new GridBagConstraints();
 	
 	JPanel returning;
+	JPanel borrowing;
 	JPanel inputui = new JPanel();
 	
 	ImageLoader il = new ImageLoader();
@@ -54,7 +55,40 @@ public class Return implements ActionListener{
 		frame.revalidate();
 		frame.repaint();
 	}
-
+	
+	public void BorrowMode(JFrame frame) {
+		enter = new JButton("借书");
+		borrowing = new JPanel(gb);
+		this.frame = frame;
+		gc.gridwidth = GridBagConstraints.REMAINDER;
+		gc.anchor = GridBagConstraints.CENTER;
+		String hint = "请扫描书籍二维码";
+		JLabel hinting = new JLabel(hint);
+		hinting.setFont(new Font(hinting.getFont().getFontName(), Font.PLAIN, 20));
+		
+		scan = new JLabel(new ImageIcon(il.LoadImage("scan.jpg")));
+		
+		//Init inputUI
+		inputui.add(b_hint);
+		inputui.add(barcode);
+		inputui.add(enter);
+		
+		enter.addActionListener(this);
+		
+		gb.setConstraints(hinting, gc);
+		gb.setConstraints(scan, gc);
+		gb.setConstraints(inputui, gc);
+		
+		borrowing.add(hinting);
+		borrowing.add(scan);
+		borrowing.add(inputui);
+		
+		frame.add(borrowing, BorderLayout.CENTER);
+		frame.revalidate();
+		frame.repaint();
+		
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		//set campus = 1 as default
@@ -119,6 +153,11 @@ public class Return implements ActionListener{
 						//Some ERROR MESSAGE should be shown below.
 					}else{
 						System.out.println("还书成功！");
+						ShowMenu sm = new ShowMenu();
+						frame.remove(returning);
+						frame.revalidate();
+						frame.repaint();
+						sm.OperationTabInit(frame);
 						
 					}
 				}
