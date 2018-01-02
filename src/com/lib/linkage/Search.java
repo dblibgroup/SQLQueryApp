@@ -60,6 +60,8 @@ public class Search implements ActionListener {
 		Object rs[][] = null;
 		Object rsp[][] = null;
 		Object rsi[][] = null;
+		frame.revalidate();
+		frame.repaint();
 		int selection = item.getSelectedIndex();  //Select the query type according to user's selection
 		String sql = "";
 		String keyword = "%" + input + "%";  //The keywords to be executed
@@ -106,7 +108,7 @@ public class Search implements ActionListener {
 							String substring = (String)rs[i][j];
 							if(substring.length() >= 15)
 							{
-								substring = substring.substring(0, 14);
+								substring = "<html>" + substring.substring(0, 14);
 								substring += "...";
 								//rs[i][j] = substring;     //We will show the intro together with the amount
 								
@@ -123,15 +125,15 @@ public class Search implements ActionListener {
 							if(rsp == null || rsp.length == 0 || (rsp.length == 1 && rsp[0].length == 0)){
 								//System.out.println("抱歉，该书籍尚未上架！");
 								String notavail = "该书籍未上架或全部借出";
-								substring += "\n" + notavail;
+								substring += "</br>" + notavail;
 									
 							}else{
 								for(int k = 0; k < rsp.length; k++){
 									/*System.out.println("书架号：" + rsp[j][0] + "." + rsp[j][1] + " 上，ISBN为："+ rsp[j][2] + 
 												" 的书数量为：" + rsp[j][3] + " 本"); */
-									String shelfnum = "书架号: " + rsp[j][0] + "." + rsp[j][1];
-									String amount = "馆藏数量: " + rsp[j][3];
-									substring += "\n"+shelfnum +"\n" + amount;
+									String shelfnum = "书架号: " + rsp[k][0] + "." + rsp[k][1];
+									String amount = "馆藏数量: " + rsp[k][3];
+									substring += "</br></br>"+shelfnum +"</br>" + amount + "</html>";
 									rs[i][j] = substring;
 								}
 							}
