@@ -27,7 +27,7 @@ public class Management implements MouseListener, ActionListener{
 	JButton next = new JButton("登录");
 	JLabel usr = new JLabel(new String(uhint));
 	JLabel psw = new JLabel(new String(phint));
-	JLabel admin;
+	JLabel admin, errormsg;
 	
 	//此对象负责加载图片
 	ImageLoader helper = new ImageLoader();
@@ -35,6 +35,8 @@ public class Management implements MouseListener, ActionListener{
 	public void ShowPWUI(JFrame frame) {
 		BufferedImage userimg = il.resizeImg(il.LoadImage("UnknownId.png"), 128,128);
 		admin = new JLabel(new ImageIcon(userimg));
+		errormsg = new JLabel();
+		errormsg.setForeground(Color.RED);
 		/* Here is the deal.
 		 * You wanna input password OR
 		 * ROLLING BACK.
@@ -65,6 +67,7 @@ public class Management implements MouseListener, ActionListener{
 		inputpassword.add(password);
 		inputpassword.add(next);
 		container.add(inputpassword, BorderLayout.CENTER);
+		container.add(errormsg, BorderLayout.SOUTH);
 		
 		next.addActionListener(this);
 		frame.add(container, BorderLayout.CENTER);
@@ -119,7 +122,7 @@ public class Management implements MouseListener, ActionListener{
 			
 			//The code below is to find out if there are any data retrieved from the database
 			if(rs == null || rs.length == 0 || (rs.length == 1 && rs[0].length == 0)){
-				System.out.println("管理员不存在，请先获取权限！");
+				errormsg.setText("管理员不存在，请先获取权限！");
 			}else{
 				for(int i = 0; i < rs.length; i++){
 					String pwdInDb = String.valueOf(rs[i][1]);     //rs[i][2] relates to the password
@@ -131,7 +134,7 @@ public class Management implements MouseListener, ActionListener{
 							ms.showFrame(frame);
 							
 						}else{
-							System.out.println("密码错误！");
+							errormsg.setText("密码错误！");
 							//Leave a error message on the screen and wait for another input.
 							
 						}

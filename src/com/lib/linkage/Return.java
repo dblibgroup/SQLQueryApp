@@ -10,6 +10,7 @@ import java.sql.SQLException;
 
 public class Return implements ActionListener{
 	JFrame frame;
+	boolean is_return = true;
 	GridBagLayout gb = new GridBagLayout();
 	GridBagConstraints gc = new GridBagConstraints();
 	
@@ -57,6 +58,7 @@ public class Return implements ActionListener{
 	}
 	
 	public void BorrowMode(JFrame frame) {
+		is_return = false;
 		enter = new JButton("借书");
 		borrowing = new JPanel(gb);
 		this.frame = frame;

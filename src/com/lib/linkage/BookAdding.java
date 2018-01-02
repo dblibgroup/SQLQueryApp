@@ -25,6 +25,7 @@ public class BookAdding implements ActionListener{
 	JTextField f_isbn, f_type, f_name, f_author, f_press, f_intro;
 	JCheckBox is_avail = new JCheckBox("上架书籍");
 	JFrame frame;
+	JLabel msg = new JLabel();
 	JLabel action = new JLabel();
 	JButton enter = new JButton("确定");
 	
@@ -63,6 +64,7 @@ public class BookAdding implements ActionListener{
 		gb.setConstraints(f_press, gc);
 		gb.setConstraints(f_intro, gc);
 		gb.setConstraints(is_avail, gc);
+		gb.setConstraints(shelfpanel, gc);
 		
 		detailspanel.add(t_isbn);
 		detailspanel.add(f_isbn);
@@ -78,8 +80,10 @@ public class BookAdding implements ActionListener{
 		detailspanel.add(f_intro);
 		detailspanel.add(is_avail);
 		detailspanel.add(shelfpanel);
+		detailspanel.add(msg);
 		
 		enter.addActionListener(this);
+		msg.setForeground(Color.RED);
 		
 		wrapper.add(detailspanel, BorderLayout.CENTER);
 		wrapper.add(enter, BorderLayout.SOUTH);
@@ -117,7 +121,7 @@ public class BookAdding implements ActionListener{
 	    	String intro = f_intro.getText();
 	    	if(ISBN == null || type == null || name == null || author == null || press == null)  
 			{                                                  
-				System.out.println("必须填写完整信息！");
+				msg.setText("必须填写完整信息！");
 			}else{
 				//This is for testing purpose only.
 				System.out.println("ISBN: "+ ISBN + " TYPE: " + type + " NAME: " + name + " AUTHOR: " + author 
@@ -142,11 +146,11 @@ public class BookAdding implements ActionListener{
 				se.printStackTrace();
 			}
 	    	if(rs == null || rs.length == 0 || (rs.length == 1 && rs[0].length == 0)){
-				action.setText("书籍录入信息失败，请联系管理员解决！");
+				msg.setText("书籍录入信息失败，请联系管理员解决！");
 				//Some ERROR MESSAGE should be shown below.
 			}else{
 				if(!is_avail.isSelected()){
-					action.setText("书籍成功添加，并未上架。");
+					msg.setText("书籍成功添加，并未上架。");
 				}else{
 					
 					//THen we just save the form into the database.
@@ -171,7 +175,7 @@ public class BookAdding implements ActionListener{
 					    rss = usrQuery.PsExecQuery(pstmt);
 					    
 						if(rss == null || rss.length == 0 || (rss.length == 1 && rss[0].length == 0)){
-							System.out.println("不存在该书架！请重新输入！");
+							msg.setText("不存在该书架！请重新输入！");
 							//Some ERROR MESSAGE should be shown below.
 							
 						}else{
@@ -191,10 +195,10 @@ public class BookAdding implements ActionListener{
 							    rsp = usrQuery.PsExecQuery(pstmt);
 							    
 							    if(rsp == null || rsp.length == 0 || (rsp.length == 1 && rsp[0].length == 0)){
-									System.out.println("书籍上架失败，请联系管理员解决！");
+									msg.setText("书籍上架失败，请联系管理员解决！");
 									//Some ERROR MESSAGE should be shown below.
 							    }else{
-									System.out.println("书籍上架成功！");
+									msg.setText("书籍上架成功！");
 							    }
 								} catch (SQLException sqlee) {
 									sqlee.printStackTrace();

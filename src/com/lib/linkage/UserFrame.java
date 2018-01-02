@@ -22,8 +22,10 @@ public class UserFrame implements ActionListener, DocumentListener{
 	JLabel entercontain;
 	JTextField username = new JTextField();
 	JPasswordField password = new JPasswordField();
+	JLabel errormsg = new JLabel("");
 	
 	public void showFrame(JFrame frame) {
+		errormsg.setForeground(Color.RED);
 		this.frame = frame;
 		JLabel usershow, ushow, pshow, hint;
 		ushow = new JLabel("用户名：");
@@ -70,6 +72,7 @@ public class UserFrame implements ActionListener, DocumentListener{
 		gc.anchor = GridBagConstraints.CENTER;
 		gbl.setConstraints(entercontain, gc);
 		login.add(entercontain);
+		login.add(errormsg);
 		username.setOpaque(false);
 		username.getDocument().addDocumentListener(this);
 		
@@ -81,6 +84,7 @@ public class UserFrame implements ActionListener, DocumentListener{
 		Enter.addActionListener(this);
 		String fontname = login.getFont().getFontName();
 		login.setFont(new Font(fontname, Font.PLAIN, 18));
+		
 		frame.add(login, BorderLayout.CENTER);
 		frame.add(Enter, BorderLayout.SOUTH);
 		frame.revalidate();
@@ -121,12 +125,13 @@ public class UserFrame implements ActionListener, DocumentListener{
 			    pstmt.setString(1, uname);
 				rs = usrQuery.PsExecQuery(pstmt);
 			} catch (SQLException se){
+				errormsg.setText("Exception Thrown");
 			    se.printStackTrace();
 		    }
 			
 			//The code below is to find out if there are any data retrieved from the database
 			if(rs == null || rs.length == 0 || (rs.length == 1 && rs[0].length == 0)){
-				System.out.println("不存在该学生！");
+				errormsg.setText("不存在该学生！");
 			}else{
 				for(int i = 0; i < rs.length; i++){
 					String pwdInDb = String.valueOf(rs[i][2]);     //rs[i][2] relates to the password
@@ -138,7 +143,7 @@ public class UserFrame implements ActionListener, DocumentListener{
 							r.BorrowMode(frame);
 							
 						}else{
-							System.out.println("密码错误！");
+							errormsg.setText("密码错误！");
 							//Leave a error message on the screen and wait for another input.
 							
 						}
