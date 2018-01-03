@@ -25,6 +25,9 @@ FocusListener, MouseListener{
 	JLabel enteredname = new JLabel("<请输入姓名>");
 	JLabel enteredsno = new JLabel("<请输入学号>");
 	JLabel enteredscard = new JLabel("<请输入校园卡号>");
+	JLabel action = new JLabel();
+	JLabel backlabel = new JLabel("返回主页");
+	JPanel backui = new JPanel(new FlowLayout(FlowLayout.LEFT)) ;
 	
 	JTextField sname = new JTextField();
 	JTextField sno = new JTextField();
@@ -132,7 +135,9 @@ FocusListener, MouseListener{
 		gbl.setConstraints(password, gc);
 		password.setBorder(border);
 		RegisterPanel.add(password);
-		
+
+		RegisterPanel.add(action);
+		action.setForeground(Color.RED);
 
 		//WARNING!!!: This block is newly added here by zorrow to add a REGISTER button
 		BufferedImage enterico = il.LoadImage("arrow_right.jpg");
@@ -284,15 +289,15 @@ FocusListener, MouseListener{
 		//These validation rules haven't been considered thoroughly so it needs to be improved.
 		if(sno.length() != 10 || !sno.matches("^\\d+$"))      //For instance, the string '2015051471' has 10 characters.
 		{                                                     //And it should be numerical.
-			System.out.println("学号输入有误，请重新尝试！");
+			action.setText("学号输入有误，请重新尝试！");
 		}else if(scard.length() > 8 || !scard.matches("^\\d+$")){
-			System.out.println("卡号输入有误，请重新尝试！");
+			action.setText("卡号输入有误，请重新尝试！");
 		}else if(passwd.length() < 6 || passwd.matches("^\\d+$") || passwd.matches("^[a-zA-Z]+$")){ 
 			//The password should be long enough(at least 6) and contains both numbers and letters(or any other characters).
-			System.out.println("密码强度较低，请增加密码复杂度！");
+			action.setText("密码强度较低，请增加密码复杂度！");
 		}else if(sname == null || (!sname.matches("[\u4e00-\u9fa5]{2,}") && !sname.matches("^[a-zA-Z]+$"))){
 			//The name should be Chinese words or letters only.
-			System.out.println("姓名输入有误，请重新尝试！");
+			action.setText("姓名输入有误，请重新尝试！");
 		}else{
 			System.out.println("Validation test passed.");
 			//check if the user exists
@@ -314,7 +319,7 @@ FocusListener, MouseListener{
 			
 			//The code below is to find out if there are any data retrieved from the database
 			if(rs == null || rs.length == 0 || (rs.length == 1 && rs[0].length == 0)){
-				System.out.println("学生信息录入确认！");
+		    	JOptionPane.showMessageDialog(null, "注册成功！", "提示信息" , JOptionPane.INFORMATION_MESSAGE); 
 				//THen we just save the form into the database.
 				try{
 					Query usrQuery = new Query();
@@ -351,7 +356,7 @@ FocusListener, MouseListener{
 			    	ee.printStackTrace();
 			    }
 			}else{
-				System.out.println("该学生或该卡的信息已经登记！");
+				action.setText("该学生或该卡的信息已经登记！");
 				//Some ERROR MESSAGE should be shown below.
 			}
 		}

@@ -110,9 +110,9 @@ public class BookAdding implements ActionListener{
 	    	String author = f_author.getText();
 	    	String press = f_press.getText();
 	    	String intro = f_intro.getText();
-	    	if(ISBN == null || type == null || name == null || author == null || press == null)  
+	    	if(ISBN.length() == 0 || type.length() == 0 || name.length() == 0 || author.length() == 0 || press.length() == 0)  
 			{                                                  
-				System.out.println("必须填写完整信息！");
+				msg.setText("必须填写完整信息！");
 			}else{
 				//This is for testing purpose only.
 				System.out.println("ISBN: "+ ISBN + " TYPE: " + type + " NAME: " + name + " AUTHOR: " + author 

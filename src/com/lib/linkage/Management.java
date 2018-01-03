@@ -27,6 +27,7 @@ public class Management implements MouseListener, ActionListener{
 	JButton next = new JButton("登录");
 	JLabel usr = new JLabel(new String(uhint));
 	JLabel psw = new JLabel(new String(phint));
+	JLabel action = new JLabel();
 	JLabel admin, errormsg;
 	
 	//此对象负责加载图片
@@ -66,6 +67,8 @@ public class Management implements MouseListener, ActionListener{
 		inputpassword.add(psw);
 		inputpassword.add(password);
 		inputpassword.add(next);
+		inputpassword.add(action);
+		action.setForeground(Color.RED);
 		container.add(inputpassword, BorderLayout.CENTER);
 		container.add(errormsg, BorderLayout.SOUTH);
 		
@@ -122,7 +125,7 @@ public class Management implements MouseListener, ActionListener{
 			
 			//The code below is to find out if there are any data retrieved from the database
 			if(rs == null || rs.length == 0 || (rs.length == 1 && rs[0].length == 0)){
-				errormsg.setText("管理员不存在，请先获取权限！");
+				action.setText("管理员不存在，请先获取权限！");
 			}else{
 				for(int i = 0; i < rs.length; i++){
 					String pwdInDb = String.valueOf(rs[i][1]);     //rs[i][2] relates to the password
@@ -134,7 +137,7 @@ public class Management implements MouseListener, ActionListener{
 							ms.showFrame(frame);
 							
 						}else{
-							errormsg.setText("密码错误！");
+							action.setText("密码错误！");
 							//Leave a error message on the screen and wait for another input.
 							
 						}

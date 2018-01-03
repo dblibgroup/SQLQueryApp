@@ -46,7 +46,7 @@ public class Search implements ActionListener {
 		searchPanel.add(search);
 		panelgroup.setLayout(new BorderLayout());
 		panelgroup.add(searchPanel,BorderLayout.NORTH);
-		panelgroup.add(resultPanel, BorderLayout.SOUTH);
+		panelgroup.add(resultPanel, BorderLayout.CENTER);
 		frame.add(panelgroup, BorderLayout.CENTER);
 		
 		frame.revalidate();

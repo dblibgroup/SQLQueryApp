@@ -25,6 +25,7 @@ public class Return implements ActionListener{
 	JButton enter;
 	JLabel b_hint = new JLabel("书籍编号: ");
 	JTextField barcode = new JTextField(20);
+	JLabel action = new JLabel();
 	
 	int Brw_Rtn = 0;     //"1" indicating the borrowMode and "2" indicating the returnMode
 	public void ReturnMode(JFrame frame) {
@@ -56,6 +57,9 @@ public class Return implements ActionListener{
 		returning.add(hinting);
 		returning.add(scan);
 		returning.add(inputui);
+
+		returning.add(action);
+		action.setForeground(Color.RED);
 		
 		frame.add(returning, BorderLayout.CENTER);
 		frame.revalidate();
@@ -90,6 +94,9 @@ public class Return implements ActionListener{
 		borrowing.add(hinting);
 		borrowing.add(scan);
 		borrowing.add(inputui);
+
+		borrowing.add(action);
+		action.setForeground(Color.RED);
 		
 		frame.add(borrowing, BorderLayout.CENTER);
 		frame.revalidate();
@@ -139,7 +146,7 @@ public class Return implements ActionListener{
 
 				//Check if it is a legal input
 				if(rs == null || rs.length == 0 || (rs.length == 1 && rs[0].length == 0)){
-					System.out.println("该书未上架！");
+					action.setText("该书未上架！");
 					//Some ERROR MESSAGE should be shown below.
 				}else{
 					//Adding borrowing records
@@ -171,10 +178,11 @@ public class Return implements ActionListener{
 				    
 				    if((rsi == null || rsi.length == 0 || (rsi.length == 1 && rsi[0].length == 0)) ||
 				    		(rsu == null || rsu.length == 0 || (rsu.length == 1 && rsu[0].length == 0))){
-						System.out.println("书籍借阅失败，请联系管理员解决！");
+				    	action.setText("书籍借阅失败，请联系管理员解决！");
 						//Some ERROR MESSAGE should be shown below.
 				    }else{
-						System.out.println("借书成功！您的还书日期为：" + rtnDate);
+						//System.out.println("借书成功！您的还书日期为：" + rtnDate);
+				    	JOptionPane.showMessageDialog(null, rtnDate, "您的还书日期是 ", JOptionPane.INFORMATION_MESSAGE); 
 						ShowMenu sm = new ShowMenu();
 						frame.remove(borrowing);
 						frame.revalidate();
@@ -202,7 +210,7 @@ public class Return implements ActionListener{
 				
 				//Delete the borrowing record
 				if(rs == null || rs.length == 0 || (rs.length == 1 && rs[0].length == 0)){
-					System.out.println("没有该借书记录或ISBN编号输入错误！");
+					action.setText("没有该借书记录或ISBN编号输入错误！");
 					//Some ERROR MESSAGE should be shown below.
 				}else{
 					int shelfNO = Integer.parseInt((String) rs[0][2]);
@@ -219,7 +227,7 @@ public class Return implements ActionListener{
 					
 					//Adding books to the bookshelf
 					if(rsd == null || rsd.length == 0 || (rsd.length == 1 && rsd[0].length == 0)){
-						System.out.println("还书过程出错，请联系管理员！");
+						action.setText("还书过程出错，请联系管理员！");
 						//Some ERROR MESSAGE should be shown below.
 						//If any error occurs here, that must be the unexpected error from the database.
 					}else{
@@ -238,7 +246,7 @@ public class Return implements ActionListener{
 							System.out.println("还书过程出错，请联系管理员！");
 							//Some ERROR MESSAGE should be shown below.
 						}else{
-							System.out.println("还书成功！");
+					    	JOptionPane.showMessageDialog(null, "还书成功！", "提示信息", JOptionPane.INFORMATION_MESSAGE); 
 							ShowMenu sm = new ShowMenu();
 							frame.remove(returning);
 							frame.revalidate();

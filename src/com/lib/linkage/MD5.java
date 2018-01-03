@@ -66,7 +66,7 @@ public class MD5 {
         byte[] pwdInDb = hexStringToByte(passwordInDb);   
         //声明盐变量   
         byte[] salt = new byte[SALT_LENGTH];   
-        //将盐从数据库中保存的口令字节数组中提取出来   
+        //将盐从数据库中保存的口令字节数组中提取出来 
         System.arraycopy(pwdInDb, 0, salt, 0, SALT_LENGTH);   
         //创建消息摘要对象   
         MessageDigest md = MessageDigest.getInstance("MD5");   
